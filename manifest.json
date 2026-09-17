@@ -1,0 +1,25 @@
+{
+  "name": "Analisador de Corrida — Padaria Gula",
+  "short_name": "Analisador",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f0f4f8",
+  "theme_color": "#00B050",
+  "description": "Analisador de corridas inDrive — Padaria Gula, Parque Piauí",
+  "icons": [
+    {
+      "src": "./icone-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icone-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
