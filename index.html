@@ -5,22 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#00B050">
-    <title>Analisador — Padaria Gula ✅</title>
+    <title>Analisador de Corrida</title>
     <link rel="manifest" href="manifest.json">
     <style>
         * {box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif;}
         body {background: #f0f4f8; padding: 15px; max-width: 480px; margin: 0 auto;}
-        .container {background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,.08);}
-        h1 {text-align: center; color: #0f766e; font-size: 1.35em; margin-bottom: 5px;}
-        .ponto {text-align: center; font-size: 0.85em; color: #64748b; margin-bottom: 15px;}
+        .container {background: white; border-radius: 16px; padding: 20px;}
+        h1 {text-align: center; color: #0f766e; font-size: 1.4em; margin-bottom: 5px;}
+        .ponto {text-align: center; color: #64748b; margin-bottom: 15px;}
         
-        .regra-sim {background: #ecfdf5; border-left: 4px solid #10b981; padding: 12px; margin-bottom: 12px; border-radius: 6px; font-size: 0.9em;}
-        .regra-nao {background: #fef2f2; border-left: 4px solid #ef4444; padding: 12px; margin-bottom: 12px; border-radius: 6px; font-weight: 600;}
+        .classificacao {background: #e8f5e9; padding: 15px; border-radius: 8px; margin-bottom: 15px; line-height: 1.8;}
+        .classificacao strong {color: #0f766e;}
+        
+        .regra-sim {background: #ecfdf5; border-left: 4px solid #10b981; padding: 12px; margin: 12px 0; border-radius: 6px;}
+        .regra-nao {background: #fef2f2; border-left: 4px solid #ef4444; padding: 12px; margin: 12px 0; border-radius: 6px; font-weight: 600;}
+        .aviso-bairro {background: #fffbeb; border-left: 4px solid #f59e0b; padding: 10px; margin: 12px 0; border-radius: 6px; font-size: 0.9em;}
         
         .input-group {margin-bottom: 15px;}
-        label {display: block; font-weight: 500; margin-bottom: 5px; color: #475569; font-size: 0.95em;}
-        input {width: 100%; padding: 12px; font-size: 1.05em; border: 2px solid #e2e8f0; border-radius: 10px; outline: none;}
-        input:focus {border-color: #0f766e;}
+        label {display: block; font-weight: 500; margin-bottom: 5px; color: #475569;}
+        input {width: 100%; padding: 12px; font-size: 1.1em; border: 2px solid #e2e8f0; border-radius: 10px;}
+        input:focus {border-color: #0f766e; outline: none;}
         
         button {width: 100%; padding: 14px; font-size: 1.1em; font-weight: bold; background: linear-gradient(135deg, #0f766e, #14b8a6); color: white; border: none; border-radius: 10px; cursor: pointer; margin-top: 5px;}
         button:active {transform: scale(.98);}
@@ -29,18 +33,15 @@
         .vale {background: #ecfdf5; border: 2px solid #10b981; color: #065f46;}
         .nao-vale {background: #fef2f2; border: 2px solid #ef4444; color: #991b1b;}
         .status {font-size: 1.4em; font-weight: 900; margin-bottom: 10px;}
-        .categoria {font-size: 1em; font-weight: bold; margin: 6px 0 12px;}
-        .linha {margin: 6px 0; font-size: 1em;}
-        .destaque {font-weight: bold; font-size: 1.1em;}
-        .contra {margin-top: 15px; padding-top: 15px; border-top: 2px dashed #cbd5e1;}
-        .contra-valor {font-size: 1.5em; font-weight: 900; color: #d97706; margin-top: 5px;}
+        .categoria {font-weight: bold; margin: 8px 0;}
+        .linha {margin: 6px 0; font-size: 1.05em;}
+        .destaque {font-weight: bold;}
         
-        hr {border: none; border-top: 2px solid #e2e8f0; margin: 20px 0;}
-        .config {margin-top: 10px; padding: 15px; background: #f8fafc; border-radius: 10px;}
-        .config h3 {font-size: 0.95em; margin-bottom: 10px; color: #475569;}
-        .salvar-btn {background: #475569; padding: 10px; font-size: 0.9em; margin-top: 5px;}
-        .aviso-bairro {background: #fffbeb; border-left: 4px solid #f59e0b; padding: 10px; margin: 12px 0; border-radius: 6px; font-size: 0.85em;}
-        .classificacao {background: #f0fdf4; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 0.85em;}
+        hr {border: none; border-top: 2px solid #e2e8f0; margin: 25px 0;}
+        .config {background: #f8fafc; padding: 15px; border-radius: 10px;}
+        .config h3 {margin-bottom: 12px; color: #475569;}
+        .salvar-btn {background: #475569; margin-top: 10px;}
+        .limpar-btn {background: #ef4444; margin-top: 8px; font-size: 0.95em; padding: 10px;}
     </style>
 </head>
 <body>
@@ -50,9 +51,9 @@
 
         <div class="classificacao">
             <strong>📏 CLASSIFICAÇÃO:</strong><br>
-            • CURTA → até 4 km total → Mínimo R$ 2,00/km<br>
-            • MÉDIA → 4,1 a 15 km → Mínimo R$ 1,60/km<br>
-            • LONGA → acima de 15 km → Mínimo R$ 1,60/km (SOMENTE Zona Sul)
+            • CURTA → até 4 km → Valor fixo R$ <span id="exibeCurta">7,00</span><br>
+            • MÉDIA → 4,1 a 15 km → R$ <span id="exibeMedia">1,60</span>/km<br>
+            • LONGA → acima de 15 km → R$ <span id="exibeLonga">1,60</span>/km (SOMENTE Zona Sul)
         </div>
 
         <div class="regra-sim">
@@ -78,7 +79,7 @@
 
         <div class="input-group">
             <label>💰 VALOR OFERECIDO (R$)</label>
-            <input type="number" step="0.01" id="valorOferta" placeholder="15.00">
+            <input type="number" step="0.01" id="valorOferta" placeholder="7.00">
         </div>
         <div class="input-group">
             <label>🏍️ ATÉ O PASSAGEIRO (km)</label>
@@ -86,7 +87,7 @@
         </div>
         <div class="input-group">
             <label>🛣️ VIAGEM DESTINO (km)</label>
-            <input type="number" step="0.01" id="distanciaViagem" placeholder="8.0">
+            <input type="number" step="0.01" id="distanciaViagem" placeholder="3.5">
         </div>
 
         <button onclick="analisar()">ANALISAR ✅</button>
@@ -95,101 +96,108 @@
             <div class="status" id="status"></div>
             <div class="categoria" id="categoria"></div>
             <div class="linha">Total: <span class="destaque" id="totalKm"></span></div>
-            <div class="linha">R$/km: <span class="destaque" id="valorPorKm"></span></div>
+            <div class="linha">Seu valor: <span class="destaque" id="valorMinimo"></span></div>
             <div class="linha">Oferta: <span class="destaque" id="ofertaFinal"></span></div>
-            <div class="contra">
-                💰 CONTRAPROPOSTA IDEAL
-                <div class="contra-valor" id="contraValor"></div>
+            <div class="linha" style="margin-top:10px; font-size:0.95em; color:#666;">
+                💬 <span id="textoObs"></span>
             </div>
         </div>
 
         <hr>
 
         <div class="config">
-            <h3>⚙️ SUAS METAS MÍNIMAS</h3>
+            <h3>⚙️ CONFIGURAR VALORES</h3>
             <div class="input-group">
-                <label>Curta (até 4 km) — R$/km</label>
-                <input type="number" step="0.01" id="metaCurta" value="2.00">
+                <label>Curta → Valor fixo até 4 km (R$)</label>
+                <input type="number" step="0.01" id="valorFixoCurta" value="7.00">
             </div>
             <div class="input-group">
-                <label>Média (4,1 a 15 km) — R$/km</label>
-                <input type="number" step="0.01" id="metaMedia" value="1.60">
+                <label>Média → R$/km</label>
+                <input type="number" step="0.01" id="valorKmMedia" value="1.60">
             </div>
             <div class="input-group">
-                <label>Longa (acima de 15 km) — R$/km</label>
-                <input type="number" step="0.01" id="metaLonga" value="1.60">
+                <label>Longa → R$/km</label>
+                <input type="number" step="0.01" id="valorKmLonga" value="1.60">
             </div>
-            <button class="salvar-btn" onclick="salvarConfig()">SALVAR METAS</button>
+            <button class="salvar-btn" onclick="salvarValores()">💾 SALVAR VALORES</button>
+            <button class="limpar-btn" onclick="limparTudo()">🗑️ LIMPAR VALORES ANTIGOS</button>
         </div>
     </div>
 
     <script>
-        let metaCurta = parseFloat(localStorage.getItem('metaCurta')) || 2.00;
-        let metaMedia = parseFloat(localStorage.getItem('metaMedia')) || 1.60;
-        let metaLonga = parseFloat(localStorage.getItem('metaLonga')) || 1.60;
+        function limparTudo() {
+            localStorage.removeItem('valorFixoCurta');
+            localStorage.removeItem('valorKmMedia');
+            localStorage.removeItem('valorKmLonga');
+            alert('✅ Valores antigos apagados! Digite novos e salve.');
+            location.reload();
+        }
 
-        document.getElementById('metaCurta').value = metaCurta.toFixed(2);
-        document.getElementById('metaMedia').value = metaMedia.toFixed(2);
-        document.getElementById('metaLonga').value = metaLonga.toFixed(2);
+        let valorFixoCurta = parseFloat(localStorage.getItem('valorFixoCurta')) || 7.00;
+        let valorKmMedia = parseFloat(localStorage.getItem('valorKmMedia')) || 1.60;
+        let valorKmLonga = parseFloat(localStorage.getItem('valorKmLonga')) || 1.60;
 
-        function salvarConfig() {
-            metaCurta = parseFloat(document.getElementById('metaCurta').value) || 2.00;
-            metaMedia = parseFloat(document.getElementById('metaMedia').value) || 1.60;
-            metaLonga = parseFloat(document.getElementById('metaLonga').value) || 1.60;
-            localStorage.setItem('metaCurta', metaCurta);
-            localStorage.setItem('metaMedia', metaMedia);
-            localStorage.setItem('metaLonga', metaLonga);
-            alert('✅ Metas salvas!');
+        function atualizarExibicao() {
+            document.getElementById('valorFixoCurta').value = valorFixoCurta.toFixed(2);
+            document.getElementById('valorKmMedia').value = valorKmMedia.toFixed(2);
+            document.getElementById('valorKmLonga').value = valorKmLonga.toFixed(2);
+            
+            document.getElementById('exibeCurta').textContent = valorFixoCurta.toFixed(2).replace('.', ',');
+            document.getElementById('exibeMedia').textContent = valorKmMedia.toFixed(2).replace('.', ',');
+            document.getElementById('exibeLonga').textContent = valorKmLonga.toFixed(2).replace('.', ',');
+        }
+
+        function salvarValores() {
+            valorFixoCurta = parseFloat(document.getElementById('valorFixoCurta').value) || 7.00;
+            valorKmMedia = parseFloat(document.getElementById('valorKmMedia').value) || 1.60;
+            valorKmLonga = parseFloat(document.getElementById('valorKmLonga').value) || 1.60;
+            
+            localStorage.setItem('valorFixoCurta', valorFixoCurta);
+            localStorage.setItem('valorKmMedia', valorKmMedia);
+            localStorage.setItem('valorKmLonga', valorKmLonga);
+            
+            atualizarExibicao();
+            alert('✅ Salvo! Veja lá em cima ↗️');
         }
 
         function analisar() {
             const oferta = parseFloat(document.getElementById('valorOferta').value);
-            const busca = parseFloat(document.getElementById('distanciaBusca').value);
-            const viagem = parseFloat(document.getElementById('distanciaViagem').value);
+            const busca = parseFloat(document.getElementById('distanciaBusca').value) || 0;
+            const viagem = parseFloat(document.getElementById('distanciaViagem').value) || 0;
 
-            if (!oferta || isNaN(busca) || isNaN(viagem) || oferta <= 0 || busca < 0 || viagem < 0) {
-                alert('⚠️ Preencha todos os campos corretamente!');
+            if (isNaN(oferta) || oferta <= 0) {
+                alert('⚠️ Digite o valor oferecido!');
                 return;
             }
 
             const totalKm = busca + viagem;
-            const valorPorKm = oferta / totalKm;
+            let valorMinimo, categoria, observacao;
 
-            let categoria, metaMinima;
-            
             if (totalKm <= 4) {
+                valorMinimo = valorFixoCurta;
                 categoria = '📍 CURTA — até 4 km';
-                metaMinima = metaCurta;
-            } else if (totalKm <= 15) {
-                categoria = '📍 MÉDIA — 4,1 a 15 km';
-                metaMinima = metaMedia;
+                observacao = `Valor fixo de R$ ${valorFixoCurta.toFixed(2).replace('.', ',')}`;
             } else {
-                categoria = '📍 LONGA — acima de 15 km (SOMENTE Zona Sul)';
-                metaMinima = metaLonga;
+                valorMinimo = valorFixoCurta + ((totalKm - 4) * valorKmMedia);
+                categoria = '📍 MÉDIA — ' + totalKm.toFixed(1).replace('.', ',') + ' km';
+                observacao = `R$ ${valorFixoCurta.toFixed(2).replace('.', ',')} fixo + R$ ${valorKmMedia.toFixed(2).replace('.', ',')}/km acima de 4 km`;
             }
 
-            const contraproposta = totalKm * metaMinima;
-            const vale = valorPorKm >= metaMinima;
+            const vale = oferta >= valorMinimo;
 
             const el = document.getElementById('resultado');
             el.style.display = 'block';
             el.className = 'resultado ' + (vale ? 'vale' : 'nao-vale');
 
-            document.getElementById('status').innerHTML = vale ? '🟢 VALE A PENA' : '🔴 NÃO VALE A PENA';
+            document.getElementById('status').innerHTML = vale ? '🟢 VALE A PENA ✅' : '🔴 NÃO VALE A PENA ❌';
             document.getElementById('categoria').textContent = categoria;
-            document.getElementById('totalKm').textContent = totalKm.toFixed(2) + ' km';
-            document.getElementById('valorPorKm').textContent = 'R$ ' + valorPorKm.toFixed(2) + '/km';
-            document.getElementById('ofertaFinal').textContent = 'R$ ' + oferta.toFixed(2);
-            document.getElementById('contraValor').textContent = 'R$ ' + contraproposta.toFixed(2);
+            document.getElementById('totalKm').textContent = totalKm.toFixed(2).replace('.', ',') + ' km';
+            document.getElementById('valorMinimo').textContent = 'R$ ' + valorMinimo.toFixed(2).replace('.', ',');
+            document.getElementById('ofertaFinal').textContent = 'R$ ' + oferta.toFixed(2).replace('.', ',');
+            document.getElementById('textoObs').textContent = observacao;
         }
-        
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./worker.js')
-                    .then(reg => console.log('✅ App funcionando sem internet!', reg))
-                    .catch(err => console.log('⚠️ Erro:', err));
-            });
-        }
+
+        atualizarExibicao();
     </script>
 </body>
 </html>
