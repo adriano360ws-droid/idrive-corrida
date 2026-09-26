@@ -32,10 +32,10 @@
         .resultado {margin-top: 20px; padding: 18px; border-radius: 12px; display: none;}
         .vale {background: #ecfdf5; border: 2px solid #10b981; color: #065f46;}
         .nao-vale {background: #fef2f2; border: 2px solid #ef4444; color: #991b1b;}
-        .status {font-size: 1.4em; font-weight: 900; margin-bottom: 10px;}
+        .status {font-size: 1.4em; font-weight: 900; margin-bottom: 12px; text-align: center;}
         .categoria {font-weight: bold; margin: 8px 0;}
-        .linha {margin: 6px 0; font-size: 1.05em;}
-        .destaque {font-weight: bold;}
+        .linha {margin: 8px 0; font-size: 1.05em;}
+        .destaque {font-weight: bold; font-size: 1.1em;}
         
         hr {border: none; border-top: 2px solid #e2e8f0; margin: 25px 0;}
         .config {background: #f8fafc; padding: 15px; border-radius: 10px;}
@@ -95,9 +95,9 @@
         <div class="resultado" id="resultado">
             <div class="status" id="status"></div>
             <div class="categoria" id="categoria"></div>
-            <div class="linha">Total: <span class="destaque" id="totalKm"></span></div>
-            <div class="linha">Seu valor: <span class="destaque" id="valorMinimo"></span></div>
-            <div class="linha">Oferta: <span class="destaque" id="ofertaFinal"></span></div>
+            <div class="linha">Total de km: <span class="destaque" id="totalKm"></span></div>
+            <div class="linha">Sua Contraproposta: <span class="destaque" id="contraproposta"></span></div>
+            <div class="linha">Valor Oferecido: <span class="destaque" id="ofertaFinal"></span></div>
             <div class="linha" style="margin-top:10px; font-size:0.95em; color:#666;">
                 💬 <span id="textoObs"></span>
             </div>
@@ -183,7 +183,9 @@
                 observacao = `R$ ${valorFixoCurta.toFixed(2).replace('.', ',')} fixo + R$ ${valorKmMedia.toFixed(2).replace('.', ',')}/km acima de 4 km`;
             }
 
-            const vale = oferta >= valorMinimo;
+            // Arredonda contraproposta para número inteiro
+            const contraproposta = Math.ceil(valorMinimo);
+            const vale = oferta >= contraproposta;
 
             const el = document.getElementById('resultado');
             el.style.display = 'block';
@@ -192,7 +194,7 @@
             document.getElementById('status').innerHTML = vale ? '🟢 VALE A PENA ✅' : '🔴 NÃO VALE A PENA ❌';
             document.getElementById('categoria').textContent = categoria;
             document.getElementById('totalKm').textContent = totalKm.toFixed(2).replace('.', ',') + ' km';
-            document.getElementById('valorMinimo').textContent = 'R$ ' + valorMinimo.toFixed(2).replace('.', ',');
+            document.getElementById('contraproposta').textContent = 'R$ ' + contraproposta.toFixed(2).replace('.', ',');
             document.getElementById('ofertaFinal').textContent = 'R$ ' + oferta.toFixed(2).replace('.', ',');
             document.getElementById('textoObs').textContent = observacao;
         }
